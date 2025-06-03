@@ -30,3 +30,11 @@ attack_range_env/
 # OS files
 .DS_Store
 Thumbs.db
+
+
+# Auto-generated files
+.env
+attack-range.yml
+
+# Remove terraform.tfvars from version control (if it exists)
+terraform/terraform.tfvars

@@ -1,14 +1,27 @@
 ---
-- name: Fix WinRM and PowerShell Configuration
+- name: Backup WinRM Configuration Fix
   hosts: windows
   gather_facts: no
   tasks:
+    - name: Check if WinRM is already configured
+      win_shell: |
+        if (Test-Path "C:\Windows\Temp\WinRM_Configured.txt") {
+            Write-Host "WinRM already configured"
+            exit 0
+        } else {
+            Write-Host "WinRM needs configuration"
+            exit 1
+        }
+      register: winrm_status
+      ignore_errors: yes
+
     - name: Configure PowerShell Execution Policy
       win_shell: |
         Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope LocalMachine -Force
         Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope CurrentUser -Force
         Write-Host "PowerShell execution policy configured"
       ignore_errors: yes
+      when: winrm_status.rc != 0
 
     - name: Configure WinRM Service
       win_shell: |
@@ -18,8 +31,12 @@
         winrm set winrm/config/client/auth '@{Basic="true"}'
         winrm set winrm/config/client '@{TrustedHosts="*"}'
         
+        # Create marker file
+        Set-Content -Path "C:\Windows\Temp\WinRM_Configured.txt" -Value "WinRM configured via backup at $(Get-Date)"
+        
         Write-Host "WinRM configuration completed"
       ignore_errors: yes
+      when: winrm_status.rc != 0
 
     - name: Test PowerShell Execution
       win_shell: |

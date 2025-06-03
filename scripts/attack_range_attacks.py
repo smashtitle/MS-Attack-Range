@@ -51,6 +51,20 @@ class AttackExecutor:
         
         # Impact
         "impact_simulation": "T1486",  # Enhanced
+        
+        # Advanced Memory Attacks
+        "lsass_memory_dump": "advanced_memory_attacks",
+        "process_hollowing": "advanced_memory_attacks", 
+        "reflective_dll_injection": "advanced_memory_attacks",
+        "advanced_memory_chain": "advanced_memory_attacks",
+        
+        # Modern Evasion Techniques
+        "amsi_bypass": "modern_evasion",
+        "etw_bypass": "modern_evasion",
+        "lolbin_abuse": "modern_evasion",
+        "dll_hijacking": "modern_evasion",
+        "process_doppelganging": "modern_evasion",
+        "modern_evasion_chain": "modern_evasion",
     }
 
     ATTACK_SEQUENCES = {
@@ -69,13 +83,46 @@ class AttackExecutor:
             "scheduled_task_persist",
             "startup_folder"
         ],
+        # 🔥 ENHANCED ATTACK SEQUENCES WITH ULTIMATE COVERAGE
+        "full_attack_simulation": [
+            # Phase 1: Discovery & Reconnaissance
+            "advanced_network_discovery", "process_discovery", "account_discovery", "system_info_discovery",
+            
+            # Phase 2: Initial Access & Credential Theft
+            "brute_force", "credential_dump", "lsass_memory_dump", "credential_vault_access",
+            
+            # Phase 3: Execution & Advanced Evasion
+            "powershell_exec", "command_shell", "amsi_bypass", "etw_bypass", "lolbin_abuse",
+            
+            # Phase 4: Advanced Memory Attacks
+            "process_hollowing", "reflective_dll_injection", "process_doppelganging", "dll_hijacking",
+            
+            # Phase 5: Persistence Mechanisms
+            "registry_run_keys", "scheduled_task_persist", "startup_folder", "multi_persistence",
+            
+            # Phase 6: Defense Evasion
+            "timestomp", "clear_logs", "disable_defender", "defense_evasion_chain",
+            
+            # Phase 7: Lateral Movement & Network
+            "lateral_movement_scan", "network_scan", "port_scan", "smb_scan",
+            
+            # Phase 8: Collection & Exfiltration
+            "data_staging", "exfiltration_attempt",
+            
+            # Phase 9: Impact
+            "impact_simulation"
+        ],
         "full_chain": [
-            "network_discovery",
-            "account_discovery",
-            "credential_dump",
-            "powershell_exec",
-            "registry_run_keys",
-            "clear_logs"
+            # EVERY SINGLE ATTACK AVAILABLE - Complete coverage
+            "advanced_network_discovery", "network_discovery", "process_discovery", "account_discovery", "system_info_discovery",
+            "credential_dump", "brute_force", "credential_mimikatz", "credential_vault_access", "lsass_memory_dump",
+            "powershell_exec", "command_shell", "scheduled_task",
+            "registry_run_keys", "scheduled_task_persist", "startup_folder", "multi_persistence", 
+            "timestomp", "clear_logs", "disable_defender", "defense_evasion_chain",
+            "network_scan", "port_scan", "smb_scan", "lateral_movement_scan",
+            "data_staging", "exfiltration_attempt", "impact_simulation",
+            "process_hollowing", "reflective_dll_injection", "advanced_memory_chain",
+            "amsi_bypass", "etw_bypass", "lolbin_abuse", "dll_hijacking", "process_doppelganging", "modern_evasion_chain"
         ],
         "cross_platform": [
             "network_discovery",
@@ -106,16 +153,21 @@ class AttackExecutor:
             "scheduled_task",
             "startup_folder"
         ],
-        "full_attack_simulation": [
-            "advanced_network_discovery",
-            "process_discovery",
-            "credential_vault_access",
-            "multi_persistence",
-            "defense_evasion_chain",
-            "data_staging",
-            "exfiltration_attempt",
-            "impact_simulation"
-        ]
+        # Advanced sequences
+        "apt_simulation": [
+            "network_discovery", "account_discovery", "lsass_memory_dump", 
+            "amsi_bypass", "dll_hijacking", "data_staging", "impact_simulation"
+        ],
+        "memory_exploitation": [
+            "lsass_memory_dump", "process_hollowing", "reflective_dll_injection"
+        ],
+        "stealth_operations": [
+            "amsi_bypass", "etw_bypass", "lolbin_abuse", "dll_hijacking"
+        ],
+        "red_team_chain": [
+            "process_discovery", "lolbin_abuse", "process_doppelganging", 
+            "dll_hijacking", "clear_logs"
+        ],
     }
     
     def __init__(self, config):
@@ -133,6 +185,18 @@ class AttackExecutor:
             "data_staging": "enhanced/exfiltration.yml",
             "exfiltration_attempt": "enhanced/exfiltration.yml",
             "impact_simulation": "enhanced/impact.yml",
+            # Advanced memory attacks
+            "lsass_memory_dump": "enhanced/advanced_memory_attacks.yml",
+            "process_hollowing": "enhanced/advanced_memory_attacks.yml",
+            "reflective_dll_injection": "enhanced/advanced_memory_attacks.yml",
+            "advanced_memory_chain": "enhanced/advanced_memory_attacks.yml",
+            # Modern evasion techniques
+            "amsi_bypass": "enhanced/modern_evasion.yml",
+            "etw_bypass": "enhanced/modern_evasion.yml",
+            "lolbin_abuse": "enhanced/modern_evasion.yml",
+            "dll_hijacking": "enhanced/modern_evasion.yml",
+            "process_doppelganging": "enhanced/modern_evasion.yml",
+            "modern_evasion_chain": "enhanced/modern_evasion.yml",
         }
         
         if attack_type in enhanced_attacks:
@@ -160,7 +224,10 @@ class AttackExecutor:
         # Build the command based on attack type
         if attack_type in ["advanced_network_discovery", "credential_vault_access", "multi_persistence", 
                           "defense_evasion_chain", "lateral_movement_scan", "data_staging", 
-                          "exfiltration_attempt", "impact_simulation"]:
+                          "exfiltration_attempt", "impact_simulation", "lsass_memory_dump",
+                          "process_hollowing", "reflective_dll_injection", "advanced_memory_chain",
+                          "amsi_bypass", "etw_bypass", "lolbin_abuse", "dll_hijacking",
+                          "process_doppelganging", "modern_evasion_chain"]:
             # Enhanced attacks with their own playbooks
             cmd = f"ansible-playbook -i playbooks/inventory.yml playbooks/{playbook} -e target_ip={target} -vv"
         elif technique_id.startswith("T"):

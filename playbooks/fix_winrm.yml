@@ -1,0 +1,29 @@
+---
+- name: Fix WinRM and PowerShell Configuration
+  hosts: windows
+  gather_facts: no
+  tasks:
+    - name: Configure PowerShell Execution Policy
+      win_shell: |
+        Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope LocalMachine -Force
+        Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope CurrentUser -Force
+        Write-Host "PowerShell execution policy configured"
+      ignore_errors: yes
+
+    - name: Configure WinRM Service
+      win_shell: |
+        # Configure WinRM settings
+        winrm set winrm/config/service '@{AllowUnencrypted="true"}'
+        winrm set winrm/config/service/auth '@{Basic="true"}'
+        winrm set winrm/config/client/auth '@{Basic="true"}'
+        winrm set winrm/config/client '@{TrustedHosts="*"}'
+        
+        Write-Host "WinRM configuration completed"
+      ignore_errors: yes
+
+    - name: Test PowerShell Execution
+      win_shell: |
+        Write-Host "Testing PowerShell execution..."
+        Get-Date
+        Write-Host "Test completed successfully"
+      ignore_errors: yes

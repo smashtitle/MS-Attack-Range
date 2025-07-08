@@ -12,8 +12,8 @@ New-Item -ItemType Directory -Force -Path "C:\Windows\Temp" ;
 New-Item -ItemType Directory -Force -Path "C:\MonitorTools\Sysmon";
 iwr -Uri "https://download.sysinternals.com/files/Sysmon.zip" -OutFile "C:\Windows\Temp\Sysmon.zip";
 Expand-Archive -Path "C:\Windows\Temp\Sysmon.zip" -DestinationPath "C:\MonitorTools\Sysmon" -Force;
-iwr -Uri https://raw.githubusercontent.com/smashtitle/sysmon-modular/refs/heads/master/sysmonconfig-research.xml -OutFile "C:\MonitorTools\Sysmon\sysmonconfig-research.xml";
-iwr -Uri https://raw.githubusercontent.com/smashtitle/sysmon-modular/refs/heads/master/sysmonconfig-null.xml -OutFile "C:\MonitorTools\Sysmon\sysmonconfig-null.xml";
+iwr -Uri "https://raw.githubusercontent.com/smashtitle/sysmon-modular/refs/heads/master/sysmonconfig-research.xml" -OutFile "C:\MonitorTools\Sysmon\sysmonconfig-research.xml";
+iwr -Uri "https://raw.githubusercontent.com/smashtitle/sysmon-modular/refs/heads/master/sysmon-null.xml" -OutFile "C:\MonitorTools\Sysmon\sysmonconfig-null.xml";
 
 
 iwr -Uri "https://raw.githubusercontent.com/smashtitle/EventLog-Baseline-Guide/refs/heads/main/bat/ASD-Servers.bat" -OutFile "C:\Windows\Temp\ASD-Servers.bat";

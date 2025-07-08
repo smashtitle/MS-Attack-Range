@@ -20,4 +20,6 @@ Start-Process -FilePath "C:\Windows\Temp\ASD-Servers.bat" -Wait;
 iwr -Uri "https://github.com/zeronetworks/rpcfirewall/releases/download/v2.2.5/RPCFW_2.2.5.zip" -OutFile "C:\Windows\Temp\rpcfirewall.zip";
 Expand-Archive "C:\Windows\Temp\rpcfirewall.zip" -DestinationPath "C:\MonitorTools" -Force; 
 iwr -Uri "https://raw.githubusercontent.com/zeronetworks/rpcfirewall/master/Configuration_templates/RpcFw.conf.AuditOnly" -OutFile "C:\MonitorTools\RPCFW_2.2.5\RpcFw.conf";
+copy "C:\MonitorTools\RPCFW_2.2.5\rpcFireWall.dll" "C:\Windows\System32\rpcFireWall.dll";
+copy "C:\MonitorTools\RPCFW_2.2.5\rpcMessages.dll" "C:\MonitorTools\RPCFW_2.2.5\rpcMessages.dll";
 & "C:\MonitorTools\RPCFW_2.2.5\rpcFwManager.exe" /install fw

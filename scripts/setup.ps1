@@ -24,4 +24,6 @@ Expand-Archive "C:\Windows\Temp\rpcfirewall.zip" -DestinationPath "C:\MonitorToo
 iwr -Uri "https://raw.githubusercontent.com/zeronetworks/rpcfirewall/master/Configuration_templates/RpcFw.conf.AuditOnly" -OutFile "C:\MonitorTools\RPCFW_2.2.5\RpcFw.conf";
 copy "C:\MonitorTools\RPCFW_2.2.5\rpcFireWall.dll" "C:\Windows\System32\rpcFireWall.dll";
 copy "C:\MonitorTools\RPCFW_2.2.5\rpcMessages.dll" "C:\Windows\System32\rpcMessages.dll";
-& "C:\MonitorTools\RPCFW_2.2.5\rpcFwManager.exe" /install fw
+& "C:\MonitorTools\RPCFW_2.2.5\rpcFwManager.exe" /install fw;
+iwr -Uri "https://www.python.org/ftp/python/3.13.5/python-3.13.5-amd64.exe" -OutFile "C:\Windows\Temp\python-3.13.5-amd64.exe";
+Start-Process -FilePath "C:\Windows\Temp\python-3.13.5-amd64.exe" -ArgumentList "/quiet InstallAllUsers=1 PrependPath=1" -Wait

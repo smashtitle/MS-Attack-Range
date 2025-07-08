@@ -13,6 +13,8 @@ New-Item -ItemType Directory -Force -Path "C:\MonitorTools\Sysmon";
 iwr -Uri "https://download.sysinternals.com/files/Sysmon.zip" -OutFile "C:\Windows\Temp\Sysmon.zip";
 Expand-Archive -Path "C:\Windows\Temp\Sysmon.zip" -DestinationPath "C:\MonitorTools\Sysmon" -Force;
 iwr -Uri https://raw.githubusercontent.com/smashtitle/sysmon-modular/refs/heads/master/sysmonconfig-research.xml -OutFile "C:\MonitorTools\Sysmon\sysmonconfig-research.xml";
+iwr -Uri https://raw.githubusercontent.com/smashtitle/sysmon-modular/refs/heads/master/sysmonconfig-null.xml -OutFile "C:\MonitorTools\Sysmon\sysmonconfig-null.xml";
+
 
 iwr -Uri "https://raw.githubusercontent.com/smashtitle/EventLog-Baseline-Guide/refs/heads/main/bat/ASD-Servers.bat" -OutFile "C:\Windows\Temp\ASD-Servers.bat";
 Start-Process -FilePath "C:\Windows\Temp\ASD-Servers.bat" -Wait;
@@ -21,5 +23,5 @@ iwr -Uri "https://github.com/zeronetworks/rpcfirewall/releases/download/v2.2.5/R
 Expand-Archive "C:\Windows\Temp\rpcfirewall.zip" -DestinationPath "C:\MonitorTools" -Force; 
 iwr -Uri "https://raw.githubusercontent.com/zeronetworks/rpcfirewall/master/Configuration_templates/RpcFw.conf.AuditOnly" -OutFile "C:\MonitorTools\RPCFW_2.2.5\RpcFw.conf";
 copy "C:\MonitorTools\RPCFW_2.2.5\rpcFireWall.dll" "C:\Windows\System32\rpcFireWall.dll";
-copy "C:\MonitorTools\RPCFW_2.2.5\rpcMessages.dll" "C:\MonitorTools\RPCFW_2.2.5\rpcMessages.dll";
+copy "C:\MonitorTools\RPCFW_2.2.5\rpcMessages.dll" "C:\Windows\System32\rpcMessages.dll";
 & "C:\MonitorTools\RPCFW_2.2.5\rpcFwManager.exe" /install fw

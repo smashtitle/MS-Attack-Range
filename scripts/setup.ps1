@@ -12,7 +12,7 @@ New-Item -ItemType Directory -Force -Path "C:\Windows\Temp" ;
 New-Item -ItemType Directory -Force -Path "C:\Tools\Sysmon";
 iwr -Uri "https://download.sysinternals.com/files/Sysmon.zip" -OutFile "C:\Windows\Temp\Sysmon.zip";
 Expand-Archive -Path "C:\Windows\Temp\Sysmon.zip" -DestinationPath "C:\Tools\Sysmon" -Force;
-iwr -Uri "https://raw.githubusercontent.com/smashtitle/sysmon-modular/refs/heads/master/sysmonconfig-research.xml" -OutFile "C:\Tools\Sysmon\sysmonconfig-research.xml";
+iwr -Uri "https://raw.githubusercontent.com/smashtitle/sysmon-modular/refs/heads/master/sysmonconfig-with-filedelete.xml" -OutFile "C:\Tools\Sysmon\sysmonconfig-research.xml";
 iwr -Uri "https://raw.githubusercontent.com/smashtitle/sysmon-modular/refs/heads/master/sysmon-null.xml" -OutFile "C:\Tools\Sysmon\sysmonconfig-null.xml";
 
 

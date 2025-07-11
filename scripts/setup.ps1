@@ -7,6 +7,8 @@ Set-MpPreference -PUAProtection 0;
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows Defender" /v DisableAntiSpyware /t REG_DWORD /d 1 /f;
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows Defender\Real-Time Protection" /v DisableRealtimeMonitoring /t REG_DWORD /d 1 /f;
 Add-MpPreference -ExclusionPath "C:\Tools";
+Enable-NetFirewallRule -DisplayGroup "File and Printer Sharing";
+reg add HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /v LocalAccountTokenFilterPolicy /t REG_DWORD /d 1 /f;
 
 New-Item -ItemType Directory -Force -Path "C:\Windows\Temp" ;
 New-Item -ItemType Directory -Force -Path "C:\Tools\Sysmon";
@@ -25,5 +27,6 @@ iwr -Uri "https://raw.githubusercontent.com/zeronetworks/rpcfirewall/master/Conf
 copy "C:\Tools\RPCFW_2.2.5\rpcFireWall.dll" "C:\Windows\System32\rpcFireWall.dll";
 copy "C:\Tools\RPCFW_2.2.5\rpcMessages.dll" "C:\Windows\System32\rpcMessages.dll";
 & "C:\Tools\RPCFW_2.2.5\rpcFwManager.exe" /install fw;
+iwr -Uri "https://github.com/smashtitle/MS-Attack-Range/raw/refs/heads/main/PsExec64.exe" -OutFile "C:\Tools\PsExec64.exe"
 iwr -Uri "https://www.python.org/ftp/python/3.13.5/python-3.13.5-amd64.exe" -OutFile "C:\Windows\Temp\python-3.13.5-amd64.exe";
 # Start-Process -FilePath "C:\Windows\Temp\python-3.13.5-amd64.exe" -ArgumentList "/quiet InstallAllUsers=1 PrependPath=1" -Wait

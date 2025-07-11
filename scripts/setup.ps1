@@ -26,4 +26,4 @@ copy "C:\Tools\RPCFW_2.2.5\rpcFireWall.dll" "C:\Windows\System32\rpcFireWall.dll
 copy "C:\Tools\RPCFW_2.2.5\rpcMessages.dll" "C:\Windows\System32\rpcMessages.dll";
 & "C:\Tools\RPCFW_2.2.5\rpcFwManager.exe" /install fw;
 iwr -Uri "https://www.python.org/ftp/python/3.13.5/python-3.13.5-amd64.exe" -OutFile "C:\Windows\Temp\python-3.13.5-amd64.exe";
-Start-Process -FilePath "C:\Windows\Temp\python-3.13.5-amd64.exe" -ArgumentList "/quiet InstallAllUsers=1 PrependPath=1" -Wait
+# Start-Process -FilePath "C:\Windows\Temp\python-3.13.5-amd64.exe" -ArgumentList "/quiet InstallAllUsers=1 PrependPath=1" -Wait
